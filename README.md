@@ -14,6 +14,8 @@
 
 ## 启动词
 
+需要围绕单个行为做更深入、可核验的分析时，使用新增的 [破甲 Skill](skills/pojia/SKILL.md)：`$pojia` 或“破甲”。它保留原始证据、竞争假设、反例和独立核验，不更改原有 `reverse-flow`。设计题目与验收方法见 [破甲设计](docs/pojia-design.md)，本机安装和真实样本实测见 [实测报告](docs/pojia-validation-2026-10-26.md)。
+
 ```text
 真心为你
 ```

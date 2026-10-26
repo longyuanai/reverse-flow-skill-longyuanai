@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+.validation/
+validation/pojia/runtime/node_modules/

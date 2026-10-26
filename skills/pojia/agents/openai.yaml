@@ -1,0 +1,4 @@
+interface:
+  display_name: "破甲"
+  short_description: "围绕具体行为，从原始样本建立可定位证据、反例与独立验证的深入逆向流程"
+  default_prompt: "使用 $pojia 分析本地授权样本，围绕一个具体行为给出证据链、竞争假设、反证实验和可重跑结论。"

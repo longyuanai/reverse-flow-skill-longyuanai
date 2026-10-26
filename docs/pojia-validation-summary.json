@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "timestamp_utc": "2026-10-26T12:21:46.379098+00:00",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "python": "3.12.14",
+  "node": "v24.18.0",
+  "rea_version": "6.4.0",
+  "zod_version": "4.6.6",
+  "npm_integrity": "sha512-Vj1zWfSlna5bphGoaoI/TcVBuYvze9u+OyPC3Shz8YkBqaCTqB4COnnRoX7XDwMpwI24ZlFEel2yEj0k8LTWEQ==",
+  "npm_lock_sha256": "169b7e71a379f31c922b0d4902c8dd21a38c267e580120d81a446d6dc9186b71",
+  "dispatcher": "E:\\001项目\\AI安全\\破解\\.runtime\\rea\\node_modules\\rea-agents\\scripts\\rea.mjs",
+  "sample_sha256": "a8ed4808697d5fcec98001ba687fcf7f8560045e318d7458461c84898356b660",
+  "source_sha256": "97f2890a2113345ac2d2cf8492eb639b453b4dc3869c7de0a19b05a365f93479",
+  "classification": {
+    "status": "managed",
+    "container": "pe",
+    "runtime_family": "unknown",
+    "implementation": "cil",
+    "managed_architecture": "anycpu",
+    "evidence": [
+      {
+        "code": "cli-header-observed",
+        "detail": "A file-backed PE CLI header and metadata root were admitted.",
+        "file_offset": 520
+      },
+      {
+        "code": "managed-architecture-derived",
+        "detail": "Managed architecture anycpu is derived from PE machine and CLI flags.",
+        "file_offset": 536
+      }
+    ]
+  },
+  "mvid": "e7fd1e60-1f0f-44ab-8d42-b810441c65db",
+  "method_token": "0x06000001",
+  "method_file_offset": 592,
+  "il_file_offset": 604,
+  "il_size": 28,
+  "il_sha256": "4884ddd2ff3e3b779069e500059d3537e1f483f212b1d1bb6c9c26541641eab2",
+  "il_hex": "0220e7913ca5610a061d62061f1964600b0720b179379e5a1f11582a",
+  "mcp_tool_count": 170,
+  "cli_mcp_normalized_equal": true,
+  "clr_reflection_il_equal": true,
+  "differential_cases": 321,
+  "invalid_input_cases": 4,
+  "negative_control_rejected": 321,
+  "truncated_exit_code": 1,
+  "not_verified": [
+    "native Ghidra/IDA/Hopper analysis",
+    "all uint32 inputs",
+    "live Codex chat MCP reconnection"
+  ],
+  "repository_snapshot_commit": "58fb372071e56da9c5df0e37593ee3f0da6b64bc",
+  "npm_git_head": "a56f7bb668ab23fec8d33f7af353ac7ed2fe1895",
+  "npm_audit_known_vulnerabilities": 0,
+  "behavior_evals": {
+    "scenarios": 3,
+    "with_skill": "passed",
+    "baseline": "passed",
+    "reconstruction_runtime_cases_each": 321,
+    "claim_of_improvement": false
+  }
+}
