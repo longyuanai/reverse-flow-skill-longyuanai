@@ -49,7 +49,9 @@ class CreateCaseTests(unittest.TestCase):
 
     def test_create_case_with_artifact(self):
         parent = Path(self.temp_dir)
-        sample = ROOT / ".validation" / "capture-1" / "sample.exe"
+        sample = ROOT / "tests" / "fixtures" / "sample.exe"
+        if not sample.exists():
+            sample = ROOT / ".validation" / "capture-1" / "sample.exe"
         if not sample.exists():
             self.skipTest("sample.exe fixture missing")
 

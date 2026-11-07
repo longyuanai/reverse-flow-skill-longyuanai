@@ -105,7 +105,9 @@ class TriageArtifactTests(unittest.TestCase):
         self.assertIn("VirtualAlloc", inds["suspicious_terms"])
 
     def test_sample_exe_triage(self):
-        sample = ROOT / ".validation" / "capture-1" / "sample.exe"
+        sample = ROOT / "tests" / "fixtures" / "sample.exe"
+        if not sample.exists():
+            sample = ROOT / ".validation" / "capture-1" / "sample.exe"
         if not sample.exists():
             self.skipTest("sample.exe not present")
         data = sample.read_bytes()

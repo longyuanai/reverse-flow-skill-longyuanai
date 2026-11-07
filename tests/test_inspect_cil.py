@@ -18,7 +18,10 @@ SPEC.loader.exec_module(inspect_cil)
 
 class InspectCilTests(unittest.TestCase):
     def setUp(self):
-        self.sample = ROOT / ".validation" / "capture-1" / "sample.exe"
+        fixture_path = ROOT / "tests" / "fixtures" / "sample.exe"
+        if not fixture_path.exists():
+            fixture_path = ROOT / ".validation" / "capture-1" / "sample.exe"
+        self.sample = fixture_path
         if not self.sample.exists():
             self.skipTest("sample.exe fixture not present")
 
