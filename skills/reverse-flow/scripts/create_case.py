@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -22,6 +24,7 @@ def main() -> int:
     parser.add_argument("--out", required=True, help="Output parent directory")
     parser.add_argument("--goal", default="", help="Optional user objective for this case")
     parser.add_argument("--scope", default="local sandbox", help="Scope label, default: local sandbox")
+    parser.add_argument("--artifact", type=Path, help="Optional artifact path to ingest into case/artifacts/")
     args = parser.parse_args()
 
     parent = Path(args.out).expanduser().resolve()
@@ -30,11 +33,47 @@ def main() -> int:
     for sub in ["artifacts", "triage", "reports", "logs", "notes", "exports", "tools", "prompts"]:
         (case_dir / sub).mkdir(parents=True, exist_ok=True)
 
+    artifact_meta = None
+    if args.artifact:
+        art_path = args.artifact.expanduser().resolve()
+        if not art_path.is_file():
+            raise SystemExit(f"Artifact not found or not a regular file: {art_path}")
+        dest_art = case_dir / "artifacts" / art_path.name
+        shutil.copyfile(art_path, dest_art)
+
+        hasher = hashlib.sha256()
+        with dest_art.open("rb") as f:
+            for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                hasher.update(chunk)
+        art_sha = hasher.hexdigest()
+        art_size = dest_art.stat().st_size
+
+        artifact_meta = {
+            "name": art_path.name,
+            "original_path": str(art_path),
+            "case_path": f"artifacts/{art_path.name}",
+            "sha256": art_sha,
+            "size": art_size,
+        }
+
+        manifest = {
+            "schema_version": 1,
+            "files": [
+                {
+                    "path": f"artifacts/{art_path.name}",
+                    "size": art_size,
+                    "sha256": art_sha,
+                }
+            ],
+        }
+        (case_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
     meta = {
         "case_name": args.case_name,
         "case_id": case_id,
         "goal": args.goal,
         "scope": args.scope,
+        "artifact": artifact_meta,
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "directories": ["artifacts", "triage", "reports", "logs", "notes", "exports", "tools", "prompts"],
     }

@@ -112,15 +112,15 @@ Read only what is needed:
 
 ## Scripts
 
-- `scripts/create_case.py`: create a structured case workspace with report templates.
-- `scripts/triage_artifact.py`: collect hashes, size, entropy, magic bytes, strings, profile hints, and recommended local tools into JSON/Markdown.
+- `scripts/create_case.py`: create a structured case workspace with report templates; optionally ingest and snapshot an initial artifact.
+- `scripts/triage_artifact.py`: collect hashes, size, entropy, binary structure (PE/ELF sections/entry/architecture), magic bytes, strings, profile hints, and recommended local tools into JSON/Markdown.
 - `scripts/report_from_triage.py`: convert one or more triage JSON files into an initial Markdown report.
 - `scripts/tool_audit.py`: detect locally available high-value reverse tools and recommend missing tools by profile.
 
 Use scripts with absolute paths. Example:
 
 ```powershell
-python <skill>/scripts/create_case.py --case-name sample-audit --goal "local sandbox reverse analysis" --out <workspace>
+python <skill>/scripts/create_case.py --case-name sample-audit --goal "local sandbox reverse analysis" --artifact <artifact> --out <workspace>
 python <skill>/scripts/triage_artifact.py <artifact> --out <case>/triage
 python <skill>/scripts/tool_audit.py --profile native --out <case>/tools/native-tool-audit.md
 python <skill>/scripts/report_from_triage.py <case>/triage/*.json --out <case>/reports/initial-report.md
