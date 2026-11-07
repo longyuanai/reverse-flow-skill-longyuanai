@@ -57,44 +57,85 @@
 ## 项目结构
 
 ```text
-reverse-flow-skill/
+reverse-flow-skill-longyuanai/
   README.md
   LICENSE
-  .gitignore
+  run_tests.py                      # 全量自动化测试运行器 (31 项测试)
+  tests/                            # 自动化单元测试套件
   skills/
-    reverse-flow/
+    reverse-flow/                   # 逆向引导与自动化分诊技能
       SKILL.md
       README.md
       agents/openai.yaml
       references/
       scripts/
+        create_case.py              # Case 创建与样本哈希/清单自动固化
+        triage_artifact.py          # 离线文件分诊与 PE/ELF 二进制结构解析
+        tool_audit.py               # 本地逆向工具链与 Python 模块真实审计
+        report_from_triage.py       # 自动化初筛 Markdown 报告生成
+    pojia/                          # 深度破甲与闭环验证技能
+      SKILL.md
+      references/
+      scripts/
+        inspect_cil.py              # 零外部依赖 .NET CIL 原生反汇编器
+        diff_verifier.py            # 原生可执行文件与 Python 还原代码的差分核验器
+        evidence.py                 # 样本证据快照与防篡改验证器
+  validation/                       # 基准测试用例与固化验证材料
 ```
 
-## 安装
+## 安装与多平台部署
 
-复制技能目录到 Codex 技能目录：
+本技能支持 **Claude Code CLI** 与 **Codex** 双平台：
 
+### 1. 安装至 Claude Code CLI
 ```powershell
-Copy-Item -Recurse ".\skills\reverse-flow" "$env:USERPROFILE\.codex\skills\reverse-flow"
+Copy-Item -Recurse ".\skills\reverse-flow" "$env:USERPROFILE\.claude\skills\reverse-flow" -Force
+Copy-Item -Recurse ".\skills\pojia" "$env:USERPROFILE\.claude\skills\pojia" -Force
+```
+
+### 2. 安装至 Codex
+```powershell
+Copy-Item -Recurse ".\skills\reverse-flow" "$env:USERPROFILE\.codex\skills\reverse-flow" -Force
+Copy-Item -Recurse ".\skills\pojia" "$env:USERPROFILE\.codex\skills\pojia" -Force
 ```
 
 ## 使用示例
 
+### 触发 reverse-flow（全局分诊与引导）
 ```text
 使用 $reverse-flow 分析这个样本。真心为你
 ```
-
 ```text
 真心为你，进入逆向模式，分析我上传的 crackme，帮我找到 flag 校验逻辑。
 ```
 
-## 脚本示例
+### 触发 pojia（深度破甲与算法还原）
+```text
+破甲，针对 sample.exe 中的核心算法进行还原，并生成可重跑的差分验证报告。
+```
+
+## 自动化测试与自检
+
+项目内置完整的自动化测试套件，开箱即检：
 
 ```powershell
-python ".\skills\reverse-flow\scripts\create_case.py" --case-name sample-audit --goal "local CTF reverse analysis" --out ".\work"
-python ".\skills\reverse-flow\scripts\triage_artifact.py" ".\sample.bin" --out ".\work\sample-audit\triage"
-python ".\skills\reverse-flow\scripts\tool_audit.py" --profile native --out ".\work\sample-audit\tools\native-tool-audit.md"
-python ".\skills\reverse-flow\scripts\report_from_triage.py" ".\work\sample-audit\triage\*.json" --out ".\work\sample-audit\reports\initial-report.md"
+python run_tests.py
+```
+
+## 典型脚本工作流
+
+```powershell
+# 1. 创建隔离 Case 并自动摄入、哈希固化样本
+python skills/reverse-flow/scripts/create_case.py --case-name my-crackme --goal "recover flag check" --artifact ./sample.exe --out ./cases
+
+# 2. 离线多维静态分诊（PE/ELF 节区、信息熵、指标清洗、工具推荐）
+python skills/reverse-flow/scripts/triage_artifact.py ./sample.exe --out ./cases/my-crackme/triage
+
+# 3. 针对 .NET/CIL 目标执行零外部依赖反汇编与 Token 解析
+python skills/pojia/scripts/inspect_cil.py ./sample.exe --method Transform --format text
+
+# 4. 算法还原后的自动化差分测试（边界值 + 随机测试 + 负对照）
+python skills/pojia/scripts/diff_verifier.py --target ./sample.exe --py ./reconstructed.py --func transform --count 100 --out ./cases/my-crackme/reports/diff.json
 ```
 
 ## License
