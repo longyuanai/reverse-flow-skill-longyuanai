@@ -8,6 +8,7 @@ import json
 import math
 import os
 import re
+import struct
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -124,6 +125,91 @@ def detect_magic(data: bytes) -> list[str]:
     return hints or ["unknown"]
 
 
+def parse_pe_brief(data: bytes) -> dict | None:
+    try:
+        if len(data) < 64 or data[:2] != b"MZ":
+            return None
+        pe_off = struct.unpack_from("<I", data, 0x3C)[0]
+        if pe_off + 24 > len(data) or data[pe_off : pe_off + 4] != b"PE\0\0":
+            return None
+        machine_id = struct.unpack_from("<H", data, pe_off + 4)[0]
+        num_sections = struct.unpack_from("<H", data, pe_off + 6)[0]
+        timestamp = struct.unpack_from("<I", data, pe_off + 8)[0]
+        opt_size = struct.unpack_from("<H", data, pe_off + 20)[0]
+        opt_magic = struct.unpack_from("<H", data, pe_off + 24)[0] if opt_size >= 2 else 0
+        entry = struct.unpack_from("<I", data, pe_off + 40)[0] if opt_size >= 20 else 0
+        subsys = struct.unpack_from("<H", data, pe_off + 92)[0] if opt_size >= 70 else 0
+
+        machines = {0x14C: "x86 (32-bit)", 0x8664: "x86_64 (64-bit)", 0xAA64: "ARM64", 0x1C0: "ARM"}
+        subsystems = {1: "Native", 2: "Windows GUI", 3: "Windows CUI (Console)"}
+
+        sec_off = pe_off + 24 + opt_size
+        sections = []
+        for i in range(min(num_sections, 64)):
+            p = sec_off + i * 40
+            if p + 40 > len(data):
+                break
+            s_name = data[p : p + 8].rstrip(b"\0").decode("latin1", errors="replace")
+            vsize = struct.unpack_from("<I", data, p + 8)[0]
+            vrva = struct.unpack_from("<I", data, p + 12)[0]
+            rsize = struct.unpack_from("<I", data, p + 16)[0]
+            roff = struct.unpack_from("<I", data, p + 20)[0]
+            sec_data = data[roff : roff + rsize] if roff + rsize <= len(data) else b""
+            sections.append({
+                "name": s_name,
+                "virtual_size": vsize,
+                "rva": hex(vrva),
+                "raw_size": rsize,
+                "raw_offset": hex(roff),
+                "entropy": round(entropy(sec_data), 3) if sec_data else 0.0,
+            })
+
+        return {
+            "kind": "PE",
+            "format": "PE32" if opt_magic == 0x10B else ("PE32+" if opt_magic == 0x20B else "PE"),
+            "machine": machines.get(machine_id, hex(machine_id)),
+            "subsystem": subsystems.get(subsys, hex(subsys)),
+            "entry_point_rva": hex(entry),
+            "timestamp": timestamp,
+            "sections_count": num_sections,
+            "sections": sections,
+        }
+    except Exception:
+        return None
+
+
+def parse_elf_brief(data: bytes) -> dict | None:
+    try:
+        if len(data) < 52 or data[:4] != b"\x7fELF":
+            return None
+        ei_class = data[4]
+        ei_data = data[5]
+        endian = "<" if ei_data == 1 else ">"
+        types = {1: "REL (Relocatable)", 2: "EXEC (Executable)", 3: "DYN (Shared object / PIE)", 4: "CORE"}
+        machines = {0x03: "x86", 0x3E: "x86_64", 0x28: "ARM", 0xB7: "AArch64", 0x08: "MIPS", 0xF3: "RISC-V"}
+        e_type = struct.unpack_from(endian + "H", data, 16)[0]
+        e_machine = struct.unpack_from(endian + "H", data, 18)[0]
+        e_entry = struct.unpack_from(endian + ("Q" if ei_class == 2 else "I"), data, 24)[0]
+        return {
+            "kind": "ELF",
+            "format": "ELF64" if ei_class == 2 else "ELF32",
+            "endian": "little" if ei_data == 1 else "big",
+            "type": types.get(e_type, hex(e_type)),
+            "machine": machines.get(e_machine, hex(e_machine)),
+            "entry_point": hex(e_entry),
+        }
+    except Exception:
+        return None
+
+
+def extract_structure(data: bytes) -> dict | None:
+    if data.startswith(b"MZ"):
+        return parse_pe_brief(data)
+    if data.startswith(b"\x7fELF"):
+        return parse_elf_brief(data)
+    return None
+
+
 def profile_and_tools(path: Path, magic_hints: list[str], inds: dict[str, list[str]]) -> tuple[list[str], list[str], list[str]]:
     ext = path.suffix.lower()
     joined = " ".join(magic_hints + [EXTENSION_HINTS.get(ext, "")]).lower()
@@ -133,8 +219,17 @@ def profile_and_tools(path: Path, magic_hints: list[str], inds: dict[str, list[s
 
     if any(x in joined for x in [".net", "clr", "managed assembly", "cil"]):
         profiles += ["managed", "dotnet"]
-        tools += ["ilspy", "dnspy", "de4dot", "rea (inspect-managed-artifact/members)"]
-        steps += ["Decompile CIL methods with ILSpy/dnSpy or REA", "Inspect CLI metadata, MVID, and type definitions"]
+        tools += [
+            "inspect_cil.py (zero-dependency CIL disassembler)",
+            "ilspy",
+            "dnspy",
+            "de4dot",
+            "rea (inspect-managed-artifact/members)",
+        ]
+        steps += [
+            "Decompile CIL methods with inspect_cil.py or ILSpy/dnSpy",
+            "Inspect CLI metadata, MVID, and type definitions",
+        ]
     elif any(x in joined for x in ["pe", "elf", "mach-o", "executable", "shared object", "dll"]):
         profiles += ["native"]
         tools += ["ghidra", "radare2/rizin", "detect-it-easy", "capa", "floss", "yara", "debugger"]
@@ -228,6 +323,28 @@ def markdown_report(data: dict) -> str:
                 lines.append(f"- `{v}`")
     else:
         lines.append("No high-signal indicators found in extracted strings.")
+
+    if data.get("structure"):
+        lines += ["", "## Binary structure", ""]
+        struct_info = data["structure"]
+        lines.append(f"- Kind: {struct_info.get('kind', 'unknown')}")
+        lines.append(f"- Format: {struct_info.get('format', 'unknown')}")
+        lines.append(f"- Machine: {struct_info.get('machine', 'unknown')}")
+        if "subsystem" in struct_info:
+            lines.append(f"- Subsystem: {struct_info['subsystem']}")
+        lines.append(f"- Entry point: `{struct_info.get('entry_point_rva') or struct_info.get('entry_point', '-')}`")
+        if struct_info.get("sections"):
+            lines += [
+                "",
+                "### Sections",
+                "| Name | Virtual size | RVA | Raw size | Raw offset | Entropy |",
+                "|---|---:|---|---:|---|---:|",
+            ]
+            for sec in struct_info["sections"]:
+                lines.append(
+                    f"| `{sec['name']}` | {sec['virtual_size']} | `{sec['rva']}` | {sec['raw_size']} | `{sec['raw_offset']}` | {sec['entropy']} |"
+                )
+
     lines += ["", "## Sample strings", ""]
     for s in data["strings"][:80]:
         safe = s.replace("`", "'")
@@ -259,6 +376,7 @@ def main() -> int:
         "hashes": hash_file(path),
         "extension_hint": EXTENSION_HINTS.get(path.suffix.lower(), ""),
         "magic_hints": detect_magic(prefix),
+        "structure": extract_structure(prefix),
         "prefix_entropy": entropy(prefix),
         "strings": strs,
         "indicators": inds,

@@ -45,6 +45,13 @@ python <skill>/scripts/evidence.py snapshot --root <case> --out manifest.json ar
 python <skill>/scripts/evidence.py verify --root <case> --manifest manifest.json
 ```
 
+遇到 .NET / CIL 托管程序集时，若缺少 ILSpy/dnSpy/REA 等外部反编译工具，可直接使用内置零外部依赖 CIL 反汇编器提取方法 Token、MVID、操作码指令与字符串：
+
+```powershell
+python <skill>/scripts/inspect_cil.py <artifact.exe> --method <MethodName> --format text
+python <skill>/scripts/inspect_cil.py <artifact.exe> --format json --out <case>/raw/cil-metadata.json
+```
+
 算法或关键函数逆向后，使用 `scripts/diff_verifier.py` 自动化对原程序与 Python 重建代码进行边界及随机输入的差分核验：
 
 ```powershell

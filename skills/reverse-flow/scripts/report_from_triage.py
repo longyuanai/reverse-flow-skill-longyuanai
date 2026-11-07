@@ -58,10 +58,16 @@ def main() -> int:
     for item in items:
         risk, reasons = risk_hint(item)
         lines.append(f"| {item.get('name','')} | {item.get('size',0)} | `{item['hashes']['sha256']}` | {', '.join(item.get('magic_hints', []))} | {', '.join(item.get('profiles', []))} | {item.get('prefix_entropy', 0):.3f} | {risk} |")
+        struct_ev = ""
+        if item.get("structure"):
+            st = item["structure"]
+            entry_pt = st.get("entry_point_rva") or st.get("entry_point", "")
+            sec_cnt = st.get("sections_count", len(st.get("sections", [])))
+            struct_ev = f"; format={st.get('format','')}; machine={st.get('machine','')}; entry={entry_pt}; sections={sec_cnt}"
         finding_lines += [
             f"### F{finding_id}: {item.get('name','artifact')} triage observations",
             f"- Path: `{item.get('path','')}`",
-            f"- Evidence: magic={', '.join(item.get('magic_hints', []))}; entropy={item.get('prefix_entropy', 0):.3f}; sha256={item['hashes']['sha256']}",
+            f"- Evidence: magic={', '.join(item.get('magic_hints', []))}; entropy={item.get('prefix_entropy', 0):.3f}; sha256={item['hashes']['sha256']}{struct_ev}",
             f"- Interpretation: {'; '.join(reasons)}.",
             f"- Confidence: Medium for file facts; Low/Medium for behavior until reverse/dynamic validation.",
             "",
