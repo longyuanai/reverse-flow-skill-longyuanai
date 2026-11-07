@@ -45,6 +45,12 @@ python <skill>/scripts/evidence.py snapshot --root <case> --out manifest.json ar
 python <skill>/scripts/evidence.py verify --root <case> --manifest manifest.json
 ```
 
+算法或关键函数逆向后，使用 `scripts/diff_verifier.py` 自动化对原程序与 Python 重建代码进行边界及随机输入的差分核验：
+
+```powershell
+python <skill>/scripts/diff_verifier.py --target <target_executable> --py <reconstructed.py> --func <func_name> --count 100 --out <case>/reports/diff-verification.json
+```
+
 `python` 必须替换为本机可用解释器；Windows 商店占位入口不算可用。清单只检测后续变化，不证明来源可信，不能防止清单与文件同时被替换。
 
 ## 交付内容

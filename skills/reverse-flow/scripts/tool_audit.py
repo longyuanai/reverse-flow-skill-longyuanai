@@ -6,6 +6,7 @@ import argparse
 import json
 import shutil
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,26 +21,29 @@ CATALOG = [
     {"name":"Detect It Easy","repo":"https://github.com/horsicq/Detect-It-Easy","stars":11062,"profile":["native","triage"],"commands":["diec","die"],"purpose":"file/compiler/packer identification"},
     {"name":"pwndbg","repo":"https://github.com/pwndbg/pwndbg","stars":10609,"profile":["native","dynamic","vuln"],"commands":["gdb"],"purpose":"GDB reverse/debug enhancement"},
     {"name":"YARA","repo":"https://github.com/VirusTotal/yara","stars":9721,"profile":["triage","memory","malware"],"commands":["yara"],"purpose":"pattern matching"},
-    {"name":"Unicorn","repo":"https://github.com/unicorn-engine/unicorn","stars":9126,"profile":["emulation","firmware","native"],"commands":["python"],"python_modules":["unicorn"],"purpose":"CPU emulation"},
-    {"name":"angr","repo":"https://github.com/angr/angr","stars":8921,"profile":["native","vuln"],"commands":["python"],"python_modules":["angr"],"purpose":"symbolic execution and CFG analysis"},
-    {"name":"Capstone","repo":"https://github.com/capstone-engine/capstone","stars":8872,"profile":["native","emulation"],"commands":["python"],"python_modules":["capstone"],"purpose":"disassembly library"},
+    {"name":"Unicorn","repo":"https://github.com/unicorn-engine/unicorn","stars":9126,"profile":["emulation","firmware","native"],"commands":[],"python_modules":["unicorn"],"purpose":"CPU emulation"},
+    {"name":"angr","repo":"https://github.com/angr/angr","stars":8921,"profile":["native","vuln"],"commands":[],"python_modules":["angr"],"purpose":"symbolic execution and CFG analysis"},
+    {"name":"Capstone","repo":"https://github.com/capstone-engine/capstone","stars":8872,"profile":["native","emulation"],"commands":[],"python_modules":["capstone"],"purpose":"disassembly library"},
     {"name":"RetDec","repo":"https://github.com/avast/retdec","stars":8566,"profile":["native"],"commands":["retdec-decompiler"],"purpose":"machine-code decompilation"},
     {"name":"GEF","repo":"https://github.com/hugsy/gef","stars":8251,"profile":["native","dynamic","vuln"],"commands":["gdb"],"purpose":"GDB enhancement"},
     {"name":"AFL++","repo":"https://github.com/AFLplusplus/AFLplusplus","stars":6628,"profile":["vuln","fuzzing"],"commands":["afl-fuzz","afl-clang-fast"],"purpose":"coverage-guided fuzzing"},
     {"name":"syzkaller","repo":"https://github.com/google/syzkaller","stars":6249,"profile":["kernel","vuln","fuzzing"],"commands":["syz-manager"],"purpose":"kernel fuzzing"},
     {"name":"capa","repo":"https://github.com/mandiant/capa","stars":6080,"profile":["triage","native","malware"],"commands":["capa"],"purpose":"capability detection"},
-    {"name":"Qiling","repo":"https://github.com/qilingframework/qiling","stars":5986,"profile":["emulation","firmware","native"],"commands":["python"],"python_modules":["qiling"],"purpose":"instrumentable binary emulation"},
-    {"name":"LIEF","repo":"https://github.com/lief-project/LIEF","stars":5460,"profile":["native","triage"],"commands":["python"],"python_modules":["lief"],"purpose":"executable format parsing"},
+    {"name":"Qiling","repo":"https://github.com/qilingframework/qiling","stars":5986,"profile":["emulation","firmware","native"],"commands":[],"python_modules":["qiling"],"purpose":"instrumentable binary emulation"},
+    {"name":"LIEF","repo":"https://github.com/lief-project/LIEF","stars":5460,"profile":["native","triage"],"commands":[],"python_modules":["lief"],"purpose":"executable format parsing"},
     {"name":"Volatility 3","repo":"https://github.com/volatilityfoundation/volatility3","stars":4223,"profile":["memory"],"commands":["vol","vol.py"],"purpose":"memory forensics"},
     {"name":"FLOSS","repo":"https://github.com/mandiant/flare-floss","stars":4066,"profile":["triage","malware","native"],"commands":["floss"],"purpose":"obfuscated string extraction"},
     {"name":"Rizin","repo":"https://github.com/rizinorg/rizin","stars":3693,"profile":["native","firmware"],"commands":["rizin","rz-bin"],"purpose":"CLI reverse engineering framework"},
+    {"name":"ILSpy","repo":"https://github.com/icsharpcode/ILSpy","stars":20500,"profile":["managed","dotnet"],"commands":["ilspycmd"],"purpose":".NET assembly decompilation"},
+    {"name":"dnSpy","repo":"https://github.com/dnSpy/dnSpy","stars":26500,"profile":["managed","dotnet","windows"],"commands":["dnSpy"],"purpose":".NET debugger and assembly editor"},
+    {"name":"de4dot","repo":"https://github.com/de4dot/de4dot","stars":6700,"profile":["managed","dotnet"],"commands":["de4dot"],"purpose":".NET deobfuscator and unpacker"},
 ]
 
 
 def check_module(module: str) -> bool:
     try:
-        subprocess.run(["python", "-c", f"import {module}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
-        return True
+        res = subprocess.run([sys.executable, "-c", f"import {module}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+        return res.returncode == 0
     except Exception:
         return False
 
@@ -88,7 +92,7 @@ def to_markdown(data: dict) -> str:
         lines.append(f"| {status} | {r['name']} | {r['stars']} | {r['purpose']} | {found} | {r['repo']} |")
     lines += ["", "## Recommended missing tools", ""]
     for i, r in enumerate(data["recommended_missing"], 1):
-        lines.append(f"{i}. **{r['name']}** ({r['stars']} stars): {r['purpose']} ? {r['repo']}")
+        lines.append(f"{i}. **{r['name']}** ({r['stars']} stars): {r['purpose']} -> {r['repo']}")
     lines += ["", "## Next step", "Run artifact triage first, then install only the missing tools needed for the selected profile.", ""]
     return "\n".join(lines)
 

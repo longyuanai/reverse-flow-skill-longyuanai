@@ -46,7 +46,7 @@ def main() -> int:
         f"# {args.title}",
         "",
         f"- Generated UTC: {datetime.now(timezone.utc).isoformat()}",
-        "- Current phase: Analysis ? Initial report",
+        "- Current phase: Analysis -> Initial report",
         "- Method: Offline triage; artifacts were not executed.",
         "",
         "## Artifact inventory",

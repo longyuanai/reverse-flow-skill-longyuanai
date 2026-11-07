@@ -63,6 +63,8 @@ SUSPICIOUS_TERMS = [
     "CreateProcess", "VirtualAlloc", "WriteProcessMemory", "LoadLibrary", "GetProcAddress",
     "socket", "connect", "InternetOpen", "WinHttp", "Crypt", "OpenSSL",
     "powershell", "cmd.exe", "/bin/sh", "chmod", "wget", "curl", "base64",
+    "IsDebuggerPresent", "CheckRemoteDebuggerPresent", "NtQueryInformationProcess", "ptrace",
+    "OutputDebugString", "CryptAcquireContext", "BCryptEncrypt"
 ]
 
 
@@ -105,7 +107,21 @@ def strings_from(data: bytes, max_count: int) -> list[str]:
 
 
 def detect_magic(data: bytes) -> list[str]:
-    return [name for magic, name in MAGIC_HINTS if data.startswith(magic)] or ["unknown"]
+    hints = [name for magic, name in MAGIC_HINTS if data.startswith(magic)]
+    # Secondary runtime/packer detection
+    if data.startswith(b"MZ"):
+        if b"BSJB" in data or b"_CorExeMain" in data or b"_CorDllMain" in data or b"mscoree.dll" in data:
+            hints.append(".NET / CLR Managed Assembly")
+        if b"UPX!" in data or b"UPX0" in data or b"UPX1" in data:
+            hints.append("UPX packed executable")
+    elif data.startswith(b"\x7fELF"):
+        if b"UPX!" in data:
+            hints.append("UPX packed ELF")
+    if b"Go buildinf:" in data or b"runtime.goexit" in data:
+        hints.append("Go runtime binary")
+    if b"rust_begin_unwind" in data or b"rustc/" in data:
+        hints.append("Rust compiled binary")
+    return hints or ["unknown"]
 
 
 def profile_and_tools(path: Path, magic_hints: list[str], inds: dict[str, list[str]]) -> tuple[list[str], list[str], list[str]]:
@@ -114,14 +130,25 @@ def profile_and_tools(path: Path, magic_hints: list[str], inds: dict[str, list[s
     profiles: list[str] = []
     tools: list[str] = []
     steps: list[str] = []
+
+    if any(x in joined for x in [".net", "clr", "managed assembly", "cil"]):
+        profiles += ["managed", "dotnet"]
+        tools += ["ilspy", "dnspy", "de4dot", "rea (inspect-managed-artifact/members)"]
+        steps += ["Decompile CIL methods with ILSpy/dnSpy or REA", "Inspect CLI metadata, MVID, and type definitions"]
+    elif any(x in joined for x in ["pe", "elf", "mach-o", "executable", "shared object", "dll"]):
+        profiles += ["native"]
+        tools += ["ghidra", "radare2/rizin", "detect-it-easy", "capa", "floss", "yara", "debugger"]
+        steps += ["Map imports/exports/strings to candidate functions", "Open the artifact in a decompiler and label entry points"]
+
+    if any(x in joined for x in ["upx packed"]):
+        profiles += ["packed"]
+        tools += ["upx -d"]
+        steps += ["Unpack artifact with 'upx -d' on a copy before disassembly"]
+
     if any(x in joined for x in ["apk", "dex", "android"]):
         profiles += ["android", "mobile"]
         tools += ["jadx", "apktool", "frida", "adb", "ghidra for native libraries"]
         steps += ["Decode APK/DEX with jadx/apktool", "Review manifest, exported components, permissions, endpoints, and native libraries"]
-    if any(x in joined for x in ["pe", "elf", "mach-o", "executable", "shared object", "dll"]):
-        profiles += ["native"]
-        tools += ["ghidra", "radare2/rizin", "detect-it-easy", "capa", "floss", "yara", "debugger"]
-        steps += ["Map imports/exports/strings to candidate functions", "Open the artifact in a decompiler and label entry points"]
     if any(x in joined for x in ["firmware", "raw binary", "filesystem", "squashfs"]) or ext in {".bin", ".img"}:
         profiles += ["firmware"]
         tools += ["binwalk", "unblob", "ghidra", "qiling/unicorn", "yara"]
@@ -147,6 +174,15 @@ def indicators(strings: list[str]) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     for name, pat in INDICATOR_PATTERNS.items():
         vals = sorted(set(pat.findall(joined)))[:50]
+        if name == "ipv4":
+            # Filter out generic loopback, broadcast, all-zeros, and assembly/software version false positives
+            clean_ips = []
+            for ip in vals:
+                parts = ip.split(".")
+                if len(parts) == 4 and all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
+                    if ip not in {"0.0.0.0", "1.0.0.0", "2.0.0.0", "127.0.0.1", "255.255.255.255"}:
+                        clean_ips.append(ip)
+            vals = clean_ips
         if vals:
             result[name] = vals
     suspicious = sorted({term for term in SUSPICIOUS_TERMS if term.lower() in joined.lower()})
