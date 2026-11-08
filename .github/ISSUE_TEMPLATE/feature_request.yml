@@ -1,0 +1,19 @@
+name: 功能建议 (Feature Request)
+description: 提出新架构反汇编支持、特征检测规则或功能增强建议
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 需求背景 (Problem / Context)
+      description: 您遇到了什么逆向痛点？
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望的解决方案 (Proposed Solution)
+      description: 您期望工具如何处理？
+    validations:
+      required: true

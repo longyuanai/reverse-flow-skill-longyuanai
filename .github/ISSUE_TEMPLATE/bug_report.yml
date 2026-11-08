@@ -1,0 +1,31 @@
+name: 缺陷反馈 (Bug Report)
+description: 提交逆向分析、脚本解析、测试失败或兼容性缺陷
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: 感谢您提交 Bug 反馈！请提供清晰的复现步骤与样本特征。
+  - type: textarea
+    id: description
+    attributes:
+      label: 缺陷描述 (Description)
+      description: 发生了什么错误？
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤与命令 (Steps to Reproduce)
+      placeholder: |
+        1. 运行命令 `python skills/pojia/scripts/inspect_cil.py <artifact>`
+        2. 抛出异常 ...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 运行环境 (OS & Python version)
+      placeholder: Windows 11 / Ubuntu 24.04, Python 3.12
+    validations:
+      required: true

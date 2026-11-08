@@ -17,13 +17,26 @@
 
 ---
 
-## 商业授权版本矩阵 (Licensing Tiers)
+## 商业授权版本矩阵与官方报价 (Pricing & Licensing Tiers)
 
-| 授权版本 | 适用对象 | 授权模式 | 核心权益 |
+> 详细权益与价格说明请查阅完整版 [官方报价清单 (PRICING.md)](docs/commercial/PRICING.md)。
+
+| 授权版本 | 适用对象 | 官方标价 | 核心权益 |
 | :--- | :--- | :--- | :--- |
-| **独立顾问版**<br>*(Consultant Edition)* | 独立安全顾问、自由职业渗透测试专家（年营收 < 50万元） | 个人年付订阅 | • 单人商业使用授权<br>• 商业项目交付免责证明<br>• 最新特征库与漏洞分诊模板同步 |
-| **企业团队版**<br>*(Enterprise Team)* | 企事业单位 SOC 团队、网络安全攻防实验室、企业安全研发团队 | 企业站点买断 / 年付订阅 | • 企业内部无限席位部署<br>• 允许接入企业私有内网 LLM (DeepSeek / Qwen 等)<br>• 提供增值税专用发票与正规采购合同<br>• 专属企业服务群与优先工单支持 |
-| **OEM / 白标集成版**<br>*(OEM Redistribution)* | 安全软硬件厂商、威胁情报平台运营商、安全服务提供商 | 定制源码授权 | • 允许闭源重新分发与转售<br>• 允许白标（White-label）嵌入商业 SaaS 产品<br>• 深度联合开发与定制化逆向引擎支持 |
+| **独立顾问版**<br>*(Consultant Edition)* | 独立安全顾问、渗透测试专家、个人安全研究员 | **¥699 / 年** | • 单人商业使用授权<br>• 商业项目交付免责证明<br>• 最新特征库与漏洞分诊模板同步 |
+| **企业团队版**<br>*(Enterprise Team)* | 企事业单位 SOC 团队、网络安全攻防实验室、企业安全研发团队 | **¥4,999 / 年**<br>*(或 ¥9,999 买断)* | • 企业内部站点无限席位部署<br>• 允许接入企业私有内网 LLM (DeepSeek / Qwen 等)<br>• 提供增值税专用发票与正规采购合同<br>• 专属企业服务群与 4h 优先工单响应 |
+| **OEM / 白标集成版**<br>*(OEM Redistribution)* | 安全软硬件厂商、威胁情报平台运营商、安全服务提供商 | **¥19,999 起 / 定制** | • 允许闭源重新分发与转售<br>• 允许白标（White-label）嵌入商业 SaaS 产品<br>• 深度联合开发与定制化逆向引擎支持 |
+
+---
+
+## 商业采购配套文档与合规凭证 (Commercial Documents)
+
+为了保障买受方企业法务合规与审计需求，我们提供全套完备的商业法务与合规模板：
+
+- 📄 **采购报价方案**：[授权版本与定价矩阵 (PRICING.md)](docs/commercial/PRICING.md)
+- 📝 **标准采购合同**：[软件商业授权与许可协议标准模板 (LICENSE-AGREEMENT-TEMPLATE.md)](docs/commercial/LICENSE-AGREEMENT-TEMPLATE.md)
+- 🏅 **官方合规凭据**：[软件商业授权许可证书样张 (LICENSE-CERTIFICATE-SAMPLE.md)](docs/commercial/LICENSE-CERTIFICATE-SAMPLE.md)
+- 💡 **采购常见疑问**：[开票与合同常见问答 (PURCHASE-FAQ.md)](docs/commercial/PURCHASE-FAQ.md)
 
 ---
 
@@ -42,6 +55,7 @@
 如需申请企业试用评估或采购商业授权，请通过以下官方渠道联系：
 
 - **官方邮箱**：`1507205727@qq.com`
+- **GitHub 在线工单**：[提交商业采购与授权咨询 Issue](https://github.com/longyuanai/reverse-flow-skill-longyuanai/issues/new?template=commercial_inquiry.yml)
 - **开发者 GitHub**：[@longyuanai](https://github.com/longyuanai)
 - **微信 / 知识库**：微信公众号【龙渊手记】
 - **商务沟通格式建议**：邮件标题请注明 `【商业授权采购】公司/机构名称 - 意向版本`，邮件正文中请附上简要的应用场景说明，我们将在 1 个工作日内予以回复并提供正规报价单与技术方案。

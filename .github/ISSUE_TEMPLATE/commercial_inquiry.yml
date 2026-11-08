@@ -1,0 +1,44 @@
+name: 商业授权与企业采购咨询 (Commercial Licensing Inquiry)
+description: 申请独立顾问版、企业团队版或 OEM 商业授权，获取官方采购合同与报价单
+title: "[商业采购]: <公司/机构名称> - <意向版本>"
+labels: ["commercial", "licensing"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您对 **reverse-flow-skill & pojia** 商业授权的关注！
+        请填写以下简要信息，我们将在 **1 个工作日内** 安排专人通过邮件向您发送正式报价单与采购合同模板。
+        如需保密或加急，您亦可直接发信至 `1507205727@qq.com`。
+  - type: input
+    id: company_name
+    attributes:
+      label: 公司 / 机构全称 (Company / Organization Name)
+      placeholder: 如：北京长亭科技有限公司 / 个人独立顾问
+    validations:
+      required: true
+  - type: dropdown
+    id: license_tier
+    attributes:
+      label: 意向商业授权版本 (Target License Tier)
+      options:
+        - 独立顾问版 (Consultant Edition, ¥699/年)
+        - 企业团队版 (Enterprise Team Edition, ¥4,999/年)
+        - 企业团队永久买断版 (Enterprise Team Buyout, ¥9,999)
+        - OEM / 厂商白标定制版 (OEM Redistribution, ¥19,999起)
+    validations:
+      required: true
+  - type: input
+    id: contact_email
+    attributes:
+      label: 商务联络邮箱 (Contact Email for Quotation)
+      placeholder: name@yourcompany.com
+    validations:
+      required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: 应用场景与部署需求 (Intended Use Case)
+      description: 简要描述您的业务场景（如：渗透测试外包、企业内网 SOC 分诊流水线、私有内网 LLM 接入、商业硬件集成等）
+      placeholder: 我们计划在内部 SOC 分析流水线中集成 inspect_cil 与 triage 自动化引擎...
+    validations:
+      required: false

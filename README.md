@@ -1,8 +1,10 @@
 # reverse-flow-skill
 
 [![CI](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml/badge.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-32%20passed-brightgreen.svg)](#自动化测试与-ci)
+[![Tests](https://img.shields.io/badge/tests-34%20passed-brightgreen.svg)](#自动化测试与-ci)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai)
+[![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-orange.svg)](LICENSE)
+[![Commercial](https://img.shields.io/badge/commercial-available-success.svg)](COMMERCIAL.md)
 
 > 面向 AI Agent / Codex 的本地 CTF 逆向工程流程技能。加载后通过 **“真心为你”** 进入逆向模式，默认在本地沙盒、CTF、crackme、wargame 或训练靶场环境中工作，按 **分析 → 报告 → 逆向 → 深度逆向 → 漏洞研判 → 用户选择下一步** 的流程推进。
 
@@ -63,9 +65,19 @@
 ```text
 reverse-flow-skill-longyuanai/
   README.md
-  LICENSE
-  run_tests.py                      # 全量自动化测试运行器 (32 项测试)
+  LICENSE                           # PolyForm Noncommercial 1.0.0 开源许可
+  COMMERCIAL.md                     # 商业授权说明与企业采购通道
+  SECURITY.md                       # 负责任的安全漏洞通报政策
+  run_tests.py                      # 全量自动化测试运行器 (34 项测试)
   tests/                            # 自动化单元测试套件
+  scripts/
+    pack_skills.py                  # 自动化便携技能包打包与 SHA256 校验生成器
+  docs/
+    commercial/                     # 商业化签约与合规材料
+      PRICING.md                    # 官方授权版本报价矩阵
+      LICENSE-AGREEMENT-TEMPLATE.md # 商业采购合同标准协议模板
+      LICENSE-CERTIFICATE-SAMPLE.md # 官方商业授权证书样张
+      PURCHASE-FAQ.md               # 商业采购与开票常见问答
   skills/
     reverse-flow/                   # 逆向引导与自动化分诊技能
       SKILL.md
@@ -148,6 +160,23 @@ python skills/pojia/scripts/diff_verifier.py --target ./sample.exe --py ./recons
 
 - **非商业用途 (Noncommercial)**：遵循 [PolyForm Noncommercial License 1.0.0](LICENSE)，对个人学习、学术研究、非营利性安全实验及 CTF 竞赛演练完全免费开放。
 - **商业用途 (Commercial)**：任何营利性实体在生产环境部署、产品集成、商业安全评估或付费培训，请参阅 [商业授权说明书 (COMMERCIAL.md)](COMMERCIAL.md) 采购官方商业许可证。
+
+### 商业采购快捷导航
+- 💰 **官方报价与权益**：[授权版本报价矩阵 (PRICING.md)](docs/commercial/PRICING.md)
+- 📄 **采购合同模板**：[商业授权标准协议 (LICENSE-AGREEMENT-TEMPLATE.md)](docs/commercial/LICENSE-AGREEMENT-TEMPLATE.md)
+- 🏅 **合规凭据样张**：[商业授权证书样张 (LICENSE-CERTIFICATE-SAMPLE.md)](docs/commercial/LICENSE-CERTIFICATE-SAMPLE.md)
+- ❓ **采购开票问答**：[商业采购常见 FAQ (PURCHASE-FAQ.md)](docs/commercial/PURCHASE-FAQ.md)
+- 📮 **在线采购申请**：[提交商业采购 Issue](https://github.com/longyuanai/reverse-flow-skill-longyuanai/issues/new?template=commercial_inquiry.yml) 或发信至 `1507205727@qq.com`
+
+---
+
+## 一键技能打包 (Release Packaging)
+
+通过内置的打包工具，可一键生成用于分发与离线加载的标准 `.skill` 压缩包和 SHA256 校验和：
+
+```powershell
+python scripts/pack_skills.py --out ./dist
+```
 
 ---
 
