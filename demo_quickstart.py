@@ -19,6 +19,37 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SAMPLE_EXE = ROOT / "tests" / "fixtures" / "sample.exe"
 
+reconfig_out = getattr(sys.stdout, "reconfigure", None)
+if callable(reconfig_out):
+    try:
+        reconfig_out(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+reconfig_err = getattr(sys.stderr, "reconfigure", None)
+if callable(reconfig_err):
+    try:
+        reconfig_err(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+
+def safe_print(*args: object, **kwargs: object) -> None:
+    sep = str(kwargs.get("sep", " "))
+    end = str(kwargs.get("end", "\n"))
+    text = sep.join(str(a) for a in args) + end
+    try:
+        sys.stdout.write(text)
+        sys.stdout.flush()
+    except (UnicodeEncodeError, OSError):
+        enc = getattr(sys.stdout, "encoding", "ascii") or "ascii"
+        clean = text.encode(enc, errors="replace").decode(enc)
+        sys.stdout.write(clean)
+        sys.stdout.flush()
+
+
+print = safe_print
+
 
 def load_module(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)

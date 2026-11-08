@@ -30,4 +30,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run Test Suite
+        env:
+          PYTHONIOENCODING: utf-8
         run: python run_tests.py
