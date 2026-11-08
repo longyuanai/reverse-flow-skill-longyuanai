@@ -352,24 +352,17 @@ def markdown_report(data: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Triage one artifact without executing it")
-    parser.add_argument("artifact", help="Path to artifact")
-    parser.add_argument("--out", required=True, help="Output directory")
-    parser.add_argument("--max-strings", type=int, default=500, help="Maximum strings to store")
-    args = parser.parse_args()
-
-    path = Path(args.artifact).expanduser().resolve()
-    out = Path(args.out).expanduser().resolve()
-    out.mkdir(parents=True, exist_ok=True)
+def triage(path: Path, max_strings: int = 500) -> dict:
+    """Perform safe offline triage on a single artifact and return structured dict."""
+    path = Path(path).expanduser().resolve()
     if not path.is_file():
-        raise SystemExit(f"not a file: {path}")
+        raise FileNotFoundError(f"Not a file: {path}")
 
     prefix = read_prefix(path)
-    strs = strings_from(prefix, args.max_strings)
+    strs = strings_from(prefix, max_strings)
     inds = indicators(strs)
     profiles, recommended_tools, next_steps = profile_and_tools(path, detect_magic(prefix), inds)
-    data = {
+    return {
         "path": str(path),
         "name": path.name,
         "size": os.path.getsize(path),
@@ -386,6 +379,22 @@ def main() -> int:
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "notes": "Offline triage only; artifact was not executed.",
     }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Triage one artifact without executing it")
+    parser.add_argument("artifact", help="Path to artifact")
+    parser.add_argument("--out", required=True, help="Output directory")
+    parser.add_argument("--max-strings", type=int, default=500, help="Maximum strings to store")
+    args = parser.parse_args()
+
+    path = Path(args.artifact).expanduser().resolve()
+    out = Path(args.out).expanduser().resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    if not path.is_file():
+        raise SystemExit(f"not a file: {path}")
+
+    data = triage(path, args.max_strings)
     stem = path.name.replace(os.sep, "_")
     json_path = out / f"{stem}.triage.json"
     md_path = out / f"{stem}.triage.md"

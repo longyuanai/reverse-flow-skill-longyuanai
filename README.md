@@ -1,7 +1,7 @@
 # reverse-flow-skill
 
 [![CI](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml/badge.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-37%20passed-brightgreen.svg)](#自动化测试与-ci)
+[![Tests](https://img.shields.io/badge/tests-38%20passed-brightgreen.svg)](#自动化测试与-ci)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai)
 [![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-orange.svg)](LICENSE)
 [![Commercial](https://img.shields.io/badge/commercial-available-success.svg)](COMMERCIAL.md)
@@ -68,7 +68,8 @@ reverse-flow-skill-longyuanai/
   LICENSE                           # PolyForm Noncommercial 1.0.0 开源许可
   COMMERCIAL.md                     # 商业授权说明与企业采购通道
   SECURITY.md                       # 负责任的安全漏洞通报政策
-  run_tests.py                      # 全量自动化测试运行器 (37 项测试)
+  demo_quickstart.py                # 30 秒自动化全流程极速演示与算法差分核验
+  run_tests.py                      # 全量自动化测试运行器 (38 项测试)
   tests/                            # 自动化单元测试套件
   scripts/
     pack_skills.py                  # 自动化便携技能包打包与 SHA256 校验生成器
@@ -131,6 +132,14 @@ Copy-Item -Recurse ".\skills\pojia" "$env:USERPROFILE\.codex\skills\pojia" -Forc
 ### 触发 pojia（深度破甲与算法还原）
 ```text
 破甲，针对 sample.exe 中的核心算法进行还原，并生成可重跑的差分验证报告。
+```
+
+## 30 秒自动化全流程极速演示 (Quickstart Demo)
+
+克隆项目后无需任何配置，直接运行自包含演示脚本，即可在 5 秒内直观体验 Case 隔离、静态分诊、CIL 反汇编与 100% 差分核验全流程：
+
+```powershell
+python demo_quickstart.py
 ```
 
 ## 自动化测试与自检

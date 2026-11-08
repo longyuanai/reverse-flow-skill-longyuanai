@@ -18,26 +18,25 @@ def slugify(value: str) -> str:
     return value or "reverse-case"
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Create a reverse-flow case workspace")
-    parser.add_argument("--case-name", required=True, help="Human readable case name")
-    parser.add_argument("--out", required=True, help="Output parent directory")
-    parser.add_argument("--goal", default="", help="Optional user objective for this case")
-    parser.add_argument("--scope", default="local sandbox", help="Scope label, default: local sandbox")
-    parser.add_argument("--artifact", type=Path, help="Optional artifact path to ingest into case/artifacts/")
-    args = parser.parse_args()
-
-    parent = Path(args.out).expanduser().resolve()
-    case_id = slugify(args.case_name)
+def create_case(
+    case_name: str,
+    out_root: Path,
+    goal: str = "",
+    scope: str = "local sandbox",
+    artifact: Path | None = None,
+) -> dict:
+    """Create a structured reverse-engineering case workspace and return metadata."""
+    parent = Path(out_root).expanduser().resolve()
+    case_id = slugify(case_name)
     case_dir = parent / case_id
     for sub in ["artifacts", "triage", "reports", "logs", "notes", "exports", "tools", "prompts"]:
         (case_dir / sub).mkdir(parents=True, exist_ok=True)
 
     artifact_meta = None
-    if args.artifact:
-        art_path = args.artifact.expanduser().resolve()
+    if artifact is not None:
+        art_path = Path(artifact).expanduser().resolve()
         if not art_path.is_file():
-            raise SystemExit(f"Artifact not found or not a regular file: {art_path}")
+            raise FileNotFoundError(f"Artifact not found or not a regular file: {art_path}")
         dest_art = case_dir / "artifacts" / art_path.name
         shutil.copyfile(art_path, dest_art)
 
@@ -69,11 +68,12 @@ def main() -> int:
         (case_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     meta = {
-        "case_name": args.case_name,
+        "case_name": case_name,
         "case_id": case_id,
-        "goal": args.goal,
-        "scope": args.scope,
-        "artifact": artifact_meta,
+        "case_dir": str(case_dir),
+        "goal": goal,
+        "scope": scope,
+        "artifacts": [artifact_meta] if artifact_meta else [],
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "directories": ["artifacts", "triage", "reports", "logs", "notes", "exports", "tools", "prompts"],
     }
@@ -123,7 +123,26 @@ Rules:
 - Record commands, hashes, tool versions, evidence, assumptions, and confidence.
 """, encoding="utf-8")
     (case_dir / "reports" / "README.md").write_text("# Reports\n\nPlace generated reports here.\n", encoding="utf-8")
-    print(case_dir)
+    return meta
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Create a reverse-flow case workspace")
+    parser.add_argument("--case-name", required=True, help="Human readable case name")
+    parser.add_argument("--out", required=True, help="Output parent directory")
+    parser.add_argument("--goal", default="", help="Optional user objective for this case")
+    parser.add_argument("--scope", default="local sandbox", help="Scope label, default: local sandbox")
+    parser.add_argument("--artifact", type=Path, help="Optional artifact path to ingest into case/artifacts/")
+    args = parser.parse_args()
+
+    meta = create_case(
+        case_name=args.case_name,
+        out_root=args.out,
+        goal=args.goal,
+        scope=args.scope,
+        artifact=args.artifact,
+    )
+    print(meta["case_dir"])
     return 0
 
 
