@@ -1,7 +1,7 @@
 # reverse-flow-skill
 
 [![CI](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml/badge.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-34%20passed-brightgreen.svg)](#自动化测试与-ci)
+[![Tests](https://img.shields.io/badge/tests-37%20passed-brightgreen.svg)](#自动化测试与-ci)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai)
 [![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-orange.svg)](LICENSE)
 [![Commercial](https://img.shields.io/badge/commercial-available-success.svg)](COMMERCIAL.md)
@@ -68,13 +68,16 @@ reverse-flow-skill-longyuanai/
   LICENSE                           # PolyForm Noncommercial 1.0.0 开源许可
   COMMERCIAL.md                     # 商业授权说明与企业采购通道
   SECURITY.md                       # 负责任的安全漏洞通报政策
-  run_tests.py                      # 全量自动化测试运行器 (34 项测试)
+  run_tests.py                      # 全量自动化测试运行器 (37 项测试)
   tests/                            # 自动化单元测试套件
   scripts/
     pack_skills.py                  # 自动化便携技能包打包与 SHA256 校验生成器
+    generate_license.py             # 商业客户授权证书与数字签名生成工具
   docs/
-    commercial/                     # 商业化签约与合规材料
+    commercial/                     # 商业化签约、合规与营销材料
       PRICING.md                    # 官方授权版本报价矩阵
+      ENTERPRISE-SOLUTION.md        # 企业级私有化部署与 ROI 商业解决方案白皮书
+      PROMOTION-WECHAT-ARTICLE.md   # 微信公众号 / FreeBuf 宣发与引流推文稿件
       LICENSE-AGREEMENT-TEMPLATE.md # 商业采购合同标准协议模板
       LICENSE-CERTIFICATE-SAMPLE.md # 官方商业授权证书样张
       PURCHASE-FAQ.md               # 商业采购与开票常见问答
@@ -162,11 +165,20 @@ python skills/pojia/scripts/diff_verifier.py --target ./sample.exe --py ./recons
 - **商业用途 (Commercial)**：任何营利性实体在生产环境部署、产品集成、商业安全评估或付费培训，请参阅 [商业授权说明书 (COMMERCIAL.md)](COMMERCIAL.md) 采购官方商业许可证。
 
 ### 商业采购快捷导航
+- 🏢 **企业解决方案**：[企业私有化部署与 ROI 白皮书 (ENTERPRISE-SOLUTION.md)](docs/commercial/ENTERPRISE-SOLUTION.md)
 - 💰 **官方报价与权益**：[授权版本报价矩阵 (PRICING.md)](docs/commercial/PRICING.md)
 - 📄 **采购合同模板**：[商业授权标准协议 (LICENSE-AGREEMENT-TEMPLATE.md)](docs/commercial/LICENSE-AGREEMENT-TEMPLATE.md)
 - 🏅 **合规凭据样张**：[商业授权证书样张 (LICENSE-CERTIFICATE-SAMPLE.md)](docs/commercial/LICENSE-CERTIFICATE-SAMPLE.md)
 - ❓ **采购开票问答**：[商业采购常见 FAQ (PURCHASE-FAQ.md)](docs/commercial/PURCHASE-FAQ.md)
+- 📢 **宣发推广软文**：[公众号/FreeBuf 推广推文稿件 (PROMOTION-WECHAT-ARTICLE.md)](docs/commercial/PROMOTION-WECHAT-ARTICLE.md)
 - 📮 **在线采购申请**：[提交商业采购 Issue](https://github.com/longyuanai/reverse-flow-skill-longyuanai/issues/new?template=commercial_inquiry.yml) 或发信至 `1507205727@qq.com`
+
+### 商业证书签发工具 (License Issuer)
+针对采购商业授权的客户，开发者可通过内置工具一键生成防伪电子证书与采购凭证：
+
+```powershell
+python scripts/generate_license.py --client "某某企业攻防实验室" --tier enterprise --email "client@corp.com" --out ./dist/licenses
+```
 
 ---
 
