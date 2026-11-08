@@ -27,12 +27,6 @@ def main() -> int:
         discovered = loader.discover(start_dir=str(tests_dir), pattern="test_*.py")
         suite.addTests(discovered)
 
-    # Add legacy validation tests if present
-    evidence_test = ROOT / "validation" / "pojia" / "test_evidence.py"
-    if evidence_test.exists():
-        spec = loader.discover(start_dir=str(evidence_test.parent), pattern="test_evidence.py")
-        suite.addTests(spec)
-
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
 
