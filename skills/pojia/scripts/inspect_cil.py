@@ -97,7 +97,7 @@ OPCODES: dict[int, tuple[str, str]] = {
 }
 
 
-def inspect_cil(path: Path) -> dict:
+def _inspect_cil(path: Path) -> dict:
     data = path.read_bytes()
     if len(data) < 64 or data[:2] != b"MZ":
         raise ValueError(f"Not a valid PE file: {path}")
@@ -372,6 +372,13 @@ def inspect_cil(path: Path) -> dict:
         "user_strings": {hex(k): v["value"] for k, v in user_strings.items()},
         "methods": methods,
     }
+
+
+def inspect_cil(path: Path) -> dict:
+    try:
+        return _inspect_cil(path)
+    except (struct.error, IndexError) as err:
+        raise ValueError(f"Truncated or malformed PE structure: {err}") from err
 
 
 def to_disassembly_text(data: dict, target_method: str | None = None) -> str:

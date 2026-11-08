@@ -1,5 +1,9 @@
 # reverse-flow-skill
 
+[![CI](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml/badge.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-32%20passed-brightgreen.svg)](#自动化测试与-ci)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai)
+
 > 面向 AI Agent / Codex 的本地 CTF 逆向工程流程技能。加载后通过 **“真心为你”** 进入逆向模式，默认在本地沙盒、CTF、crackme、wargame 或训练靶场环境中工作，按 **分析 → 报告 → 逆向 → 深度逆向 → 漏洞研判 → 用户选择下一步** 的流程推进。
 
 ## 项目简介
@@ -138,26 +142,29 @@ python skills/pojia/scripts/inspect_cil.py ./sample.exe --method Transform --for
 python skills/pojia/scripts/diff_verifier.py --target ./sample.exe --py ./reconstructed.py --func transform --count 100 --out ./cases/my-crackme/reports/diff.json
 ```
 
-## License
+## 开源许可与商业授权 (License & Commercial)
 
-- ## 交流群聊发布页
-- <QQ> 252452778 (非本人运营）
+本项目采用 **双轨许可模式 (Dual-Licensing Model)**：
 
+- **非商业用途 (Noncommercial)**：遵循 [PolyForm Noncommercial License 1.0.0](LICENSE)，对个人学习、学术研究、非营利性安全实验及 CTF 竞赛演练完全免费开放。
+- **商业用途 (Commercial)**：任何营利性实体在生产环境部署、产品集成、商业安全评估或付费培训，请参阅 [商业授权说明书 (COMMERCIAL.md)](COMMERCIAL.md) 采购官方商业许可证。
 
+---
 
-- <发布分享频道> https://t.me/zxwnai
+## 免责声明与合规使用规范 (Disclaimer & Acceptable Use Policy)
 
+1. **合法授权前提**：本项目及其相关工具仅供计算机科学教学、学术研究、授权安全评估、CTF 竞赛演练及恶意代码防御性分诊使用。使用者在分析任何目标二进制文件前，必须确保已取得权利人的明确合法授权，或属于《计算机软件保护条例》第十七条规定的合理使用范畴。
+2. **禁止非法破坏与侵权**：严禁将本项目用于侵犯他人知识产权、规避或破坏正版商业软件版权技术保护措施（DRM / 授权锁）、制作或传播恶意破解补丁、未经授权的网络入侵、恶意软件传播或任何违反所在国/地区法律法规的活动。
+3. **技术中立与责任限制**：本项目作为中立的技术分析与逆向工程辅助工具提供。因使用者违反法律、未授权分析受保护商业软件或滥用工具所引发的任何直接或间接法律纠纷与责任，均由使用者自行承担，本项目作者及贡献者概不承担任何连带责任。
 
+---
 
-- <闲聊技术交流吹水群聊> https://t.me/zxwnaisui
+## 商务合作与交流
 
+- **商务采购与咨询邮箱**：`1507205727@qq.com`
+- **公众号 / 知识库**：微信公众号【龙渊手记】
+- **GitHub**：[@longyuanai](https://github.com/longyuanai)
 
-## 赞助和打赏喵
- -爱发电 https://ifdian.net/a/zxwn520
-
-
-
-MIT License
 
 
 

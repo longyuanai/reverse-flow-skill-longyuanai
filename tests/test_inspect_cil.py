@@ -65,6 +65,18 @@ class InspectCilTests(unittest.TestCase):
         finally:
             Path(tmp.name).unlink(missing_ok=True)
 
+    def test_reject_truncated_pe(self):
+        tmp = tempfile.NamedTemporaryFile(suffix=".exe", delete=False)
+        try:
+            # PE header offset points to EOF boundary so reading PE fields would trigger struct/index error
+            tmp.write(b"MZ" + b"\x00" * 58 + b"\x40\x00\x00\x00" + b"PE\x00\x00" + b"\x00" * 5)
+            tmp.close()
+            with self.assertRaises(ValueError) as ctx:
+                inspect_cil.inspect_cil(Path(tmp.name))
+            self.assertTrue("Truncated or malformed" in str(ctx.exception) or "Invalid PE" in str(ctx.exception))
+        finally:
+            Path(tmp.name).unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()

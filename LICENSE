@@ -1,21 +1,65 @@
-MIT License
+PolyForm Noncommercial License 1.0.0
 
-Copyright (c) 2026 reverse-flow-skill contributors
+<https://polyformproject.org/licenses/noncommercial/1.0.0>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2026 longyuan (@longyuanai) and reverse-flow-skill contributors
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## Acceptance
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+In order to receive this license, you must agree to its rules. The rules of this license are both obligations under that agreement and conditions to your license. You must not do anything with this software that triggers a rule that you cannot or will not follow.
+
+## Copyright License
+
+The licensor grants you a copyright license for this software on these conditions:
+
+### Use
+
+You may use this software for any noncommercial purpose.
+
+### Noncommercial Purposes
+
+Noncommercial purposes include:
+
+1.  Personal use for research, education, or recreation.
+
+2.  Use on behalf of a non-profit organization for that organization's purposes.
+
+3.  Use by a government entity for public purposes.
+
+4.  Use for security research, defense-oriented triage, educational training, and authorized capture-the-flag (CTF) challenges.
+
+Commercial purposes include:
+
+1.  Any use by a for-profit business entity, whether for internal operations, client services, commercial security assessments, or integration into products.
+
+2.  Any use in providing paid commercial security services, paid reverse engineering consulting, or commercial training courses.
+
+To obtain a commercial license, please refer to COMMERCIAL.md or contact: 1507205727@qq.com.
+
+### Redistributing
+
+You may redistribute this software with your changes, if any, on these conditions:
+
+1.  You must give this software, including this license and notices about patents and trademarks, to anyone you give this software to.
+
+2.  You must not apply any terms, conditions, or technologies to this software that try to restrict anyone else from doing anything this license permits.
+
+3.  You must not license anyone to do anything this license permits with this software.
+
+4.  You must clearly state that this software is licensed under the PolyForm Noncommercial License 1.0.0.
+
+## Patent License
+
+The licensor grants you a patent license for this software for any patent claims the licensor can license, or becomes able to license, that you infringe by using the software as permitted by this license.
+
+## Fair Use
+
+You may have "fair use" rights for this software under the law. This license does not affect those rights.
+
+## No Other Rights
+
+These terms do not give you any other rights, and they do not give any other rights to patents, trademarks, or trade secrets.
+
+## Disclaimer of Warranties
+
+As far as the law allows, this software comes as is, without any warranty or condition, and the licensor will not be liable to anyone for any damages related to this software or this license, under any kind of legal claim.
