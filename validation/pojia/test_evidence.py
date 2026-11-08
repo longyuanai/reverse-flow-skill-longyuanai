@@ -6,6 +6,7 @@ from pathlib import Path
 
 SKILL = Path(__file__).resolve().parents[2] / "skills" / "pojia"
 spec = importlib.util.spec_from_file_location("evidence", SKILL / "scripts" / "evidence.py")
+assert spec is not None and spec.loader is not None
 evidence = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(evidence)
 

@@ -64,7 +64,7 @@
 reverse-flow-skill-longyuanai/
   README.md
   LICENSE
-  run_tests.py                      # 全量自动化测试运行器 (31 项测试)
+  run_tests.py                      # 全量自动化测试运行器 (32 项测试)
   tests/                            # 自动化单元测试套件
   skills/
     reverse-flow/                   # 逆向引导与自动化分诊技能

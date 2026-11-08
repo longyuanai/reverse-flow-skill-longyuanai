@@ -155,6 +155,7 @@ def main() -> int:
         write("summary.json", summary)
         write("commands.json", commands)
         spec = importlib.util.spec_from_file_location("pojia_evidence", PROJECT / "skills/pojia/scripts/evidence.py")
+        assert spec is not None and spec.loader is not None
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         names = [p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()]
