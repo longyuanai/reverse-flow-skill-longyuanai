@@ -37,6 +37,7 @@ CATALOG = [
     {"name":"ILSpy","repo":"https://github.com/icsharpcode/ILSpy","stars":20500,"profile":["managed","dotnet"],"commands":["ilspycmd"],"purpose":".NET assembly decompilation"},
     {"name":"dnSpy","repo":"https://github.com/dnSpy/dnSpy","stars":26500,"profile":["managed","dotnet","windows"],"commands":["dnSpy"],"purpose":".NET debugger and assembly editor"},
     {"name":"de4dot","repo":"https://github.com/de4dot/de4dot","stars":6700,"profile":["managed","dotnet"],"commands":["de4dot"],"purpose":".NET deobfuscator and unpacker"},
+    {"name":"Craft Anything","repo":"https://github.com/storytold/craft-anything","stars":1850,"profile":["recreation","clean-room","native","web","triage","mcp"],"commands":["craft-anything-cli","craft-anything"],"purpose":"Clean-room reverse engineering & AI recreation engine with 320 MCP tools"},
 ]
 
 

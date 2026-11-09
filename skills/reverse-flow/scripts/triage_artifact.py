@@ -115,6 +115,16 @@ def detect_magic(data: bytes) -> list[str]:
             hints.append(".NET / CLR Managed Assembly")
         if b"UPX!" in data or b"UPX0" in data or b"UPX1" in data:
             hints.append("UPX packed executable")
+        if b"ConfusedByAttribute" in data or b"ConfuserEx" in data:
+            hints.append("ConfuserEx / .NET obfuscated")
+        if b".vmp0" in data or b".vmp1" in data or b"VMProtect" in data:
+            hints.append("VMProtect virtualized/packed")
+        if b".themida" in data or b"Themida" in data:
+            hints.append("Themida/WinLicense protected")
+        if b"MEI\x0c\x0b\x0a\x0b" in data or b"pyinstaller" in data.lower():
+            hints.append("PyInstaller packaged binary")
+        if b"app.asar" in data or b"atom.asar" in data:
+            hints.append("Electron / Node.js application container")
     elif data.startswith(b"\x7fELF"):
         if b"UPX!" in data:
             hints.append("UPX packed ELF")

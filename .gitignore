@@ -4,3 +4,5 @@ __pycache__/
 validation/pojia/runtime/node_modules/
 dist/
 *.skill
+*.friction_purge.bak
+*.bak

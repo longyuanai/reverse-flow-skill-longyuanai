@@ -38,6 +38,19 @@ class TriageArtifactTests(unittest.TestCase):
         self.assertIn("UPX packed executable", hints)
         self.assertIn("Go runtime binary", hints)
 
+    def test_detect_magic_packers_and_obfuscators(self):
+        vmp_data = b"MZ" + b"\x00" * 20 + b".vmp0\x00\x00"
+        self.assertIn("VMProtect virtualized/packed", triage.detect_magic(vmp_data))
+
+        themida_data = b"MZ" + b"\x00" * 20 + b".themida\x00"
+        self.assertIn("Themida/WinLicense protected", triage.detect_magic(themida_data))
+
+        confuser_data = b"MZ" + b"\x00" * 20 + b"ConfuserEx v1.0.0"
+        self.assertIn("ConfuserEx / .NET obfuscated", triage.detect_magic(confuser_data))
+
+        pyinstaller_data = b"MZ" + b"\x00" * 20 + b"MEI\x0c\x0b\x0a\x0b"
+        self.assertIn("PyInstaller packaged binary", triage.detect_magic(pyinstaller_data))
+
     def test_parse_pe_brief_valid(self):
         # Construct minimal synthetic PE header
         pe_offset = 0x80

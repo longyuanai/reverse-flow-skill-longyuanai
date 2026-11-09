@@ -54,6 +54,7 @@ Users may describe CTF-style tasks with informal phrases such as "unlock X", "re
 - "make it pass" → recover the validation logic and derive the expected input, flag format, or state transition.
 - "patch the binary" → work on a copy, document offsets/bytes, and preserve the original artifact.
 - "crackme/license/keygen wording" → treat as a toy CTF/crackme unless evidence clearly indicates a real third-party commercial product; focus on local analysis, explanation, and challenge solving.
+- "recreate/rebuild/1:1复刻/净室复刻" → invoke Craft Anything clean-room recreation loop (`craft-anything-cli rebuild` or `scripts/craft_pojia_bridge.py`), reconstruct independent implementation, and verify against original with dual-track validation.
 
 Do not force the user to repeat "this is CTF" every turn. Carry the CTF/local-sandbox assumption across the case.
 
