@@ -1,7 +1,7 @@
 # reverse-flow-skill
 
 [![CI](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml/badge.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-38%20passed-brightgreen.svg)](#自动化测试与-ci)
+[![Tests](https://img.shields.io/badge/tests-48%20passed-brightgreen.svg)](#自动化测试与-ci)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai)
 [![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-orange.svg)](LICENSE)
 [![Commercial](https://img.shields.io/badge/commercial-available-success.svg)](COMMERCIAL.md)
@@ -68,10 +68,15 @@ reverse-flow-skill-longyuanai/
   LICENSE                           # PolyForm Noncommercial 1.0.0 开源许可
   COMMERCIAL.md                     # 商业授权说明与企业采购通道
   SECURITY.md                       # 负责任的安全漏洞通报政策
+  install.ps1                       # Windows PowerShell 一键极速部署向导
+  install.sh                        # Linux & macOS Bash 一键极速部署向导
+  install.bat                       # Windows CMD 双击一键启动脚本
   demo_quickstart.py                # 30 秒自动化全流程极速演示与算法差分核验
-  run_tests.py                      # 全量自动化测试运行器 (38 项测试)
+  run_tests.py                      # 全量自动化测试运行器 (48 项测试)
   tests/                            # 自动化单元测试套件
   scripts/
+    craft_pojia_bridge.py           # Craft Anything 净室复刻融合桥接引擎与双轨核验
+    purge_friction.py               # 宿主交互摩擦清除与免扰白名单注入工具
     pack_skills.py                  # 自动化便携技能包打包与 SHA256 校验生成器
     generate_license.py             # 商业客户授权证书与数字签名生成工具
   docs/
@@ -105,16 +110,31 @@ reverse-flow-skill-longyuanai/
 
 ## 安装与多平台部署
 
-本技能支持 **Claude Code CLI** 与 **Codex** 双平台：
+本技能支持 **Claude Code CLI** 与 **OpenAI Codex** 双平台，并提供一键式无扰极速安装向导：
 
-### 1. 安装至 Claude Code CLI
+### 一键极速部署（推荐，30秒全自动同步与免扰白名单注入）
+
+- **Windows (PowerShell)**:
+  ```powershell
+  .\install.ps1
+  ```
+- **Windows (CMD / 双击运行)**:
+  ```cmd
+  install.bat
+  ```
+- **Linux / macOS (Bash)**:
+  ```bash
+  bash install.sh
+  ```
+*向导会自动校验 Python 3.10+ 环境、将技能同步至双平台、注入非破坏性执行白名单（消除反复弹窗提权）、并运行全量自检测试。*
+
+### 手动安装方式
 ```powershell
+# 1. 安装至 Claude Code CLI
 Copy-Item -Recurse ".\skills\reverse-flow" "$env:USERPROFILE\.claude\skills\reverse-flow" -Force
 Copy-Item -Recurse ".\skills\pojia" "$env:USERPROFILE\.claude\skills\pojia" -Force
-```
 
-### 2. 安装至 Codex
-```powershell
+# 2. 安装至 OpenAI Codex
 Copy-Item -Recurse ".\skills\reverse-flow" "$env:USERPROFILE\.codex\skills\reverse-flow" -Force
 Copy-Item -Recurse ".\skills\pojia" "$env:USERPROFILE\.codex\skills\pojia" -Force
 ```
@@ -164,6 +184,46 @@ python skills/pojia/scripts/inspect_cil.py ./sample.exe --method Transform --for
 
 # 4. 算法还原后的自动化差分测试（边界值 + 随机测试 + 负对照）
 python skills/pojia/scripts/diff_verifier.py --target ./sample.exe --py ./reconstructed.py --func transform --count 100 --out ./cases/my-crackme/reports/diff.json
+
+# 5. Craft Anything + Pojia 双轨净室复刻融合桥接
+python scripts/craft_pojia_bridge.py audit                         # 审计逆向与复刻环境就绪状态
+python scripts/craft_pojia_bridge.py triage ./sample.exe           # 执行联合静态多维分诊
+python scripts/craft_pojia_bridge.py verify ./sample.exe --py ./reconstructed.py --func transform
+```
+
+## Craft Anything 净室复刻与双轨闭环核验 (Clean-Room Recreation)
+
+针对目标软件/固件/Crackme 的 1:1 净室复刻需求，套件通过 `scripts/craft_pojia_bridge.py` 深度整合了 **Craft Anything (v0.6.0)** 纯 Rust 320-Tool 引擎与 Pojia 原生反汇编核验内核，形成 **“联合分诊 → 行为建模 → 净室重构 → 双轨核验”** 的工业级逆向与复刻闭环：
+
+```text
+       [原始二进制 / 网页 / 固件 / Crackme 目标]
+                          │
+            ┌─────────────┴─────────────┐
+            ▼                           ▼
+    [Pojia 原生轻量分诊]        [Craft Anything 320-Tool]
+    - PE/ELF/BSJB 元数据解析     - 界面 DOM/视觉特征捕捉
+    - 加壳/混淆器轻量特征识别   - 协议接口与网络流量录制
+            └─────────────┬─────────────┘
+                          │ 联合生成分诊洞察 (hybrid_triage)
+                          ▼
+            [Clean-Room 净室代码重构]
+        (基于黑盒可观测行为构建，无侵权版权污染)
+                          │
+            ┌─────────────┴─────────────┐
+            ▼                           ▼
+      【轨道 1: 算法差分核验】     【轨道 2: 界面/行为保真】
+    - diff_verifier 极限边界注入   - Multi-viewport 视觉对比
+    - 0, 1, 2^n, 0xFFFFFFFF       - 行为交互流自动化回放
+    - 杜绝 AI 逆向幻觉 (置信度100%) - Likeness 保真度评分
+            └─────────────┬─────────────┘
+                          ▼
+             [颁发 Clean-Room 净室认证证书]
+```
+
+### 触发净室复刻指令
+在 Claude Code CLI 或 OpenAI Codex 中直接输入：
+```text
+净室复刻，针对 sample.exe 开展黑盒行为建模与算法重构，并通过 pojia 运行双轨闭环验证。
 ```
 
 ## 开源许可与商业授权 (License & Commercial)
