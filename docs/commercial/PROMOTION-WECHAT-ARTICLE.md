@@ -40,11 +40,21 @@
 - 自动解码 Tiny/Fat Method Header，逆向提取 IL 字节码指令并准确还原 MemberRef / TypeRef Token；
 - 具备强悍的畸形头与截断 PE 异常容错机制，杜绝恶意二进制引发的解析器崩溃。
 
-#### 突破 2：黑盒差分核验器，100% 杜绝幻觉（`diff_verifier.py`）
+#### 突破 2：零依赖原生 Native 入口点与 x86/x64 指令解码（`inspect_native.py`）
+针对 PE32/PE32+ 及 ELF32/ELF64 原生编译二进制文件，无需依赖外部 IDA、Ghidra 或 objdump：
+- 纯 Python 结构体解析 Section Headers / Program Headers，精准映射入口点 RVA / VAddr 到物理文件偏移；
+- 内置轻量指令流解码器，自动解析 x86/x64 函数 Prologue（push rbp, mov rbp, rsp, sub rsp）、系统调用、相对跳转与 Call 偏移。
+
+#### 突破 3：黑盒差分核验器，100% 杜绝幻觉（`diff_verifier.py`）
 大模型还原出来的 Python 算法对不对？别猜，让数据说话！
 - 核验器自动向原生可执行文件与 Python 还原代码并发注入海量测试用例；
 - 覆盖极端边界值（`0`, `1`, `2^n`, `0x7FFFFFFF`, `0xFFFFFFFF`）、海量伪随机 Corpus 以及畸形反例；
 - 逐个比对二进制与 Python 的输出真值，实现**字节级一致性验证**。只要出现 1 个比特的偏差，立即勒令大模型修正假设，直到 100% 匹配！
+
+#### 突破 4：Craft Anything 双轨净室复刻融合（`craft_pojia_bridge.py`）
+与自动化智能复刻框架深度整合：
+- 结合 Pojia 底层字节级数学核验与 Craft Anything 320 规则/视觉保真度引擎；
+- 形成从黑盒分诊、净室算法重构到双轨自动化验收的 1:1 净室复刻流水线。
 
 ---
 
@@ -52,7 +62,7 @@
 
 我们深知安全工程师对工具稳定性的苛求。本项目已达到工业级交付标准：
 
-- **37 项全自动化测试**：覆盖率 100%，自研测试运行器秒级响应。
+- **52 项全自动化测试**：覆盖率 100%，自研测试运行器秒级响应。
 - **Pyright 严格模式类型检查**：**0 errors, 0 warnings**。
 - **GitHub Actions 全平台 CI 矩阵**：覆盖 **Ubuntu、Windows、macOS** 三大操作系统，在 **Python 3.10、3.11、3.12、3.13** 共 12 种运行环境中全部秒级绿色通过！
 - **双平台部署**：原生兼容 **Claude Code CLI** 与 **OpenAI Codex**，一键分发安装。

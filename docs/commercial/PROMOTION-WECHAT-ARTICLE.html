@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>告别大模型逆向幻觉！首个零依赖自举 + 差分验证的 AI 逆向破甲套件开源</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 15px; line-height: 1.8; color: #333333; background-color: #f7f8fa;">
+
+  <!-- Article Container -->
+  <div style="max-width: 680px; margin: 0 auto; background: #ffffff; padding: 32px 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+
+    <!-- Header Banner -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <span style="display: inline-block; background: #e6f7ff; color: #0070f3; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;">
+        REVERSE ENGINEERING &bull; AI AGENT &bull; CLEAN-ROOM
+      </span>
+      <h1 style="font-size: 24px; font-weight: 700; color: #1a1a1a; margin: 16px 0 10px 0; line-height: 1.4;">
+        告别大模型逆向幻觉！首个零依赖自举 + 差分验证的 AI 逆向破甲引擎正式开源 (v1.0.0)
+      </h1>
+      <p style="font-size: 13px; color: #888888; margin: 0;">
+        作者：龙渊 &bull; 微信公众号【龙渊手记】 &bull; 2026-11-09
+      </p>
+    </div>
+
+    <!-- Intro Card -->
+    <div style="background: #fafafa; border-left: 4px solid #0070f3; padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 24px; font-size: 14px; color: #555555;">
+      <strong>导语：</strong>过去一年里，大语言模型在写代码、审源码上如鱼得水。但在二进制逆向与 CTF 题面前，却经常被<strong>“看似自信、实则全错”的逆向幻觉</strong>所支配。今天，我们正式开源<strong>「真心为你 & 破甲」</strong>双技能套件，用<strong>确定性代码与差分核验</strong>彻底驯服 AI 逆向！
+    </div>
+
+    <!-- Pain points section -->
+    <h3 style="font-size: 18px; font-weight: 600; color: #111111; margin-top: 28px; margin-bottom: 14px; border-bottom: 1px solid #eeeeee; padding-bottom: 8px;">
+      一、大模型逆向的三大“灾难级”幻觉
+    </h3>
+    <ul style="padding-left: 20px; margin-bottom: 24px; color: #444444;">
+      <li style="margin-bottom: 8px;"><strong>幻觉灾难 1：</strong>面对反汇编指令，模型看似胸有成竹，分析起算法来头头是道，结果写出来的 Python 还原代码一跑——全是错的；</li>
+      <li style="margin-bottom: 8px;"><strong>幻觉灾难 2：</strong>在干净沙箱或轻量容器里，没有安装商业级 IDA Pro、Ghidra 或 ILSpy 时，模型立刻两手一摊：“环境缺少工具，无法分析”；</li>
+      <li style="margin-bottom: 8px;"><strong>幻觉灾难 3：</strong>分析过程全凭黑盒推理，没有任何证据快照和验证闭环，结论无法被独立重跑与核验。</li>
+    </ul>
+
+    <!-- Core Solution -->
+    <h3 style="font-size: 18px; font-weight: 600; color: #111111; margin-top: 28px; margin-bottom: 14px; border-bottom: 1px solid #eeeeee; padding-bottom: 8px;">
+      二、核心突破：AI 负责假设，确定性代码负责核验
+    </h3>
+    <p style="margin-bottom: 16px;">
+      整个项目由两个深度协同的技能组成：
+    </p>
+    <div style="background: #f0f7ff; border: 1px solid #bae0ff; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+      <p style="margin: 0 0 10px 0; font-weight: 600; color: #0050b3;">1. reverse-flow（全局分诊与流程控制）</p>
+      <p style="margin: 0; font-size: 14px; color: #333;">口令【<strong>真心为你</strong>】启动，负责样本隔离、SHA256 哈希固化、多维静态分诊（PE/ELF/信息熵/高危指标清洗）以及输出工业级审计报告。</p>
+      <p style="margin: 16px 0 10px 0; font-weight: 600; color: #0050b3;">2. pojia 破甲（深度逆向与算法还原）</p>
+      <p style="margin: 0; font-size: 14px; color: #333;">口令【<strong>破甲</strong>】启动，针对加壳、复杂算法、混淆控制流执行外科手术式解剖与数学级差分核验。</p>
+    </div>
+
+    <!-- Feature 1 -->
+    <div style="margin-bottom: 22px;">
+      <h4 style="font-size: 16px; font-weight: 600; color: #0070f3; margin-bottom: 6px;">
+        ✦ 突破 1：零外部依赖自举 CIL 反编译引擎 (inspect_cil.py)
+      </h4>
+      <p style="margin: 0 0 8px 0; color: #444; font-size: 14.5px;">
+        在没有安装任何反编译器（dnSpy/ILSpy）的极端精简沙箱中，我们利用 Python 纯标准库手工完整实现 <strong>ECMA-335 CLI 标准</strong> 解析：
+      </p>
+      <div style="background: #282c34; color: #abb2bf; padding: 12px 16px; border-radius: 6px; font-family: Consolas, Monaco, monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">
+        # 纯 Python 零依赖提取 .NET 字节码与 Token<br>
+        python skills/pojia/scripts/inspect_cil.py sample.exe --method Transform --format text
+      </div>
+    </div>
+
+    <!-- Feature 2 -->
+    <div style="margin-bottom: 22px;">
+      <h4 style="font-size: 16px; font-weight: 600; color: #0070f3; margin-bottom: 6px;">
+        ✦ 突破 2：零依赖 Native 原生入口点与 x86/x64 解码 (inspect_native.py)
+      </h4>
+      <p style="margin: 0 0 8px 0; color: #444; font-size: 14.5px;">
+        针对 PE32/PE32+ 及 ELF32/ELF64 原生编译二进制，利用纯 Python 结构体映射虚拟地址到物理文件偏移，并内置指令流解码器：
+      </p>
+      <div style="background: #282c34; color: #abb2bf; padding: 12px 16px; border-radius: 6px; font-family: Consolas, Monaco, monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">
+        # 纯 Python 解析 Native 入口点指令流 (prologue, calls, syscall)<br>
+        python skills/pojia/scripts/inspect_native.py sample.exe --json
+      </div>
+    </div>
+
+    <!-- Feature 3 -->
+    <div style="margin-bottom: 22px;">
+      <h4 style="font-size: 16px; font-weight: 600; color: #0070f3; margin-bottom: 6px;">
+        ✦ 突破 3：黑盒差分核验器，100% 杜绝 AI 幻觉 (diff_verifier.py)
+      </h4>
+      <p style="margin: 0 0 8px 0; color: #444; font-size: 14.5px;">
+        大模型还原出来的 Python 代码到底对不对？别猜！自动向原程序与 Python 代码并发注入海量边界测试用例（0, 1, 2^n, 0xFFFFFFFF, 随机语料），逐个比对二进制与 Python 输出，必须 <strong>100% 匹配</strong> 才能交付！
+      </p>
+    </div>
+
+    <!-- Feature 4 -->
+    <div style="margin-bottom: 24px;">
+      <h4 style="font-size: 16px; font-weight: 600; color: #0070f3; margin-bottom: 6px;">
+        ✦ 突破 4：Craft Anything 双轨净室复刻融合 (Clean-Room Recreation)
+      </h4>
+      <p style="margin: 0 0 8px 0; color: #444; font-size: 14.5px;">
+        与智能复刻框架协同，底层算法由 Pojia 负责数学一致性差分，前端界面与交互由 320 规则/视觉引擎保障保真度，实现无版权污染的 1:1 净室重构。
+      </p>
+    </div>
+
+    <!-- Stats Matrix -->
+    <h3 style="font-size: 18px; font-weight: 600; color: #111111; margin-top: 28px; margin-bottom: 14px; border-bottom: 1px solid #eeeeee; padding-bottom: 8px;">
+      三、工业级工程交付标准
+    </h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px;">
+      <tbody>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+          <td style="padding: 10px; font-weight: 600; width: 35%; color: #333;">自动化单元测试</td>
+          <td style="padding: 10px; color: #52c41a; font-weight: 600;">52 项全量自动化测试，100% 通过</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0; background: #fafafa;">
+          <td style="padding: 10px; font-weight: 600; color: #333;">静态类型检查</td>
+          <td style="padding: 10px; color: #52c41a; font-weight: 600;">Pyright Strict 模式 0 errors, 0 warnings</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+          <td style="padding: 10px; font-weight: 600; color: #333;">跨平台 CI 矩阵</td>
+          <td style="padding: 10px; color: #52c41a; font-weight: 600;">Win / macOS / Linux &times; Python 3.10-3.13 (12 矩阵全绿)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0; background: #fafafa;">
+          <td style="padding: 10px; font-weight: 600; color: #333;">双平台开箱即用</td>
+          <td style="padding: 10px; color: #0070f3; font-weight: 600;">Claude Code CLI + OpenAI Codex 原生支持</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Quick Start -->
+    <h3 style="font-size: 18px; font-weight: 600; color: #111111; margin-top: 28px; margin-bottom: 14px; border-bottom: 1px solid #eeeeee; padding-bottom: 8px;">
+      四、三分钟极速上手
+    </h3>
+    <div style="background: #282c34; color: #abb2bf; padding: 14px 18px; border-radius: 6px; font-family: Consolas, Monaco, monospace; font-size: 13px; line-height: 1.6; margin-bottom: 24px; overflow-x: auto;">
+      <span style="color: #5c6370;"># 1. 克隆代码并运行全套测试</span><br>
+      git clone https://github.com/longyuanai/reverse-flow-skill-longyuanai.git<br>
+      cd reverse-flow-skill-longyuanai<br>
+      python run_tests.py<br><br>
+      <span style="color: #5c6370;"># 2. 体验 30 秒自动化逆向极速演示</span><br>
+      python demo_quickstart.py<br><br>
+      <span style="color: #5c6370;"># 3. 安装到 Claude Code</span><br>
+      install.bat
+    </div>
+
+    <!-- Commercial & License -->
+    <h3 style="font-size: 18px; font-weight: 600; color: #111111; margin-top: 28px; margin-bottom: 14px; border-bottom: 1px solid #eeeeee; padding-bottom: 8px;">
+      五、开源许可与商业授权
+    </h3>
+    <p style="margin-bottom: 12px; font-size: 14.5px;">
+      本项目采用国际通行的 <strong>双轨许可模式 (Dual-Licensing Model)</strong>：
+    </p>
+    <ul style="padding-left: 20px; margin-bottom: 20px; font-size: 14px; color: #444;">
+      <li style="margin-bottom: 6px;"><strong>开源非商业使用</strong>：遵循 PolyForm Noncommercial License 1.0.0，对个人学习、CTF 竞赛、学术研究完全免费开放！</li>
+      <li style="margin-bottom: 6px;"><strong>商业交付与企业集成</strong>：提供独立顾问版（¥699/年）、企业团队版（¥4,999/年或 ¥9,999 永久买断，支持专票）、OEM 白标集成版，内置电子防伪证书签发器。</li>
+    </ul>
+
+    <!-- Footer Box -->
+    <div style="margin-top: 36px; padding: 20px; background: #fafafa; border-radius: 8px; text-align: center; border: 1px dashed #d9d9d9;">
+      <p style="font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0 0 8px 0;">
+        🌟 欢迎在 GitHub 为我们点亮一颗 Star！
+      </p>
+      <p style="font-size: 13.5px; color: #0070f3; margin: 0 0 14px 0; word-break: break-all;">
+        https://github.com/longyuanai/reverse-flow-skill-longyuanai
+      </p>
+      <p style="font-size: 13px; color: #666666; margin: 0;">
+        关注公众号【<strong>龙渊手记</strong>】，后台回复【<strong>破甲</strong>】，即可免费领取离线 .skill 便携安装包与实战教程。<br>
+        商务合作与企业采购联系：<code>1507205727@qq.com</code>
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>
