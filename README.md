@@ -1,7 +1,7 @@
 # reverse-flow-skill
 
 [![CI](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml/badge.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-48%20passed-brightgreen.svg)](#自动化测试与-ci)
+[![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen.svg)](#自动化测试与-ci)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://github.com/longyuanai/reverse-flow-skill-longyuanai)
 [![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-orange.svg)](LICENSE)
 [![Commercial](https://img.shields.io/badge/commercial-available-success.svg)](COMMERCIAL.md)
@@ -72,7 +72,7 @@ reverse-flow-skill-longyuanai/
   install.sh                        # Linux & macOS Bash 一键极速部署向导
   install.bat                       # Windows CMD 双击一键启动脚本
   demo_quickstart.py                # 30 秒自动化全流程极速演示与算法差分核验
-  run_tests.py                      # 全量自动化测试运行器 (48 项测试)
+  run_tests.py                      # 全量自动化测试运行器 (52 项测试)
   tests/                            # 自动化单元测试套件
   scripts/
     craft_pojia_bridge.py           # Craft Anything 净室复刻融合桥接引擎与双轨核验
@@ -182,10 +182,13 @@ python skills/reverse-flow/scripts/triage_artifact.py ./sample.exe --out ./cases
 # 3. 针对 .NET/CIL 目标执行零外部依赖反汇编与 Token 解析
 python skills/pojia/scripts/inspect_cil.py ./sample.exe --method Transform --format text
 
-# 4. 算法还原后的自动化差分测试（边界值 + 随机测试 + 负对照）
+# 4. 针对 Native 原生目标 (PE32/PE32+/ELF32/ELF64) 执行零外部依赖入口点解析与汇编解码
+python skills/pojia/scripts/inspect_native.py ./sample.exe --json
+
+# 5. 算法还原后的自动化差分测试（边界值 + 随机测试 + 负对照）
 python skills/pojia/scripts/diff_verifier.py --target ./sample.exe --py ./reconstructed.py --func transform --count 100 --out ./cases/my-crackme/reports/diff.json
 
-# 5. Craft Anything + Pojia 双轨净室复刻融合桥接
+# 6. Craft Anything + Pojia 双轨净室复刻融合桥接
 python scripts/craft_pojia_bridge.py audit                         # 审计逆向与复刻环境就绪状态
 python scripts/craft_pojia_bridge.py triage ./sample.exe           # 执行联合静态多维分诊
 python scripts/craft_pojia_bridge.py verify ./sample.exe --py ./reconstructed.py --func transform

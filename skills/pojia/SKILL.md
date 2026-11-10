@@ -53,6 +53,13 @@ python <skill>/scripts/inspect_cil.py <artifact.exe> --method <MethodName> --for
 python <skill>/scripts/inspect_cil.py <artifact.exe> --format json --out <case>/raw/cil-metadata.json
 ```
 
+遇到原生 Native (PE32/PE32+/ELF32/ELF64) 二进制时，若缺少 IDA/Ghidra/objdump 等反汇编工具，可直接使用内置零外部依赖原生入口点与 x86/x64 指令解码器：
+
+```powershell
+python <skill>/scripts/inspect_native.py <artifact.exe_or_elf>
+python <skill>/scripts/inspect_native.py <artifact.exe_or_elf> --json > <case>/raw/native-entry.json
+```
+
 算法或关键函数逆向后，使用 `scripts/diff_verifier.py` 自动化对原程序与 Python 重建代码进行边界及随机输入的差分核验：
 
 ```powershell

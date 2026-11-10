@@ -242,8 +242,21 @@ def profile_and_tools(path: Path, magic_hints: list[str], inds: dict[str, list[s
         ]
     elif any(x in joined for x in ["pe", "elf", "mach-o", "executable", "shared object", "dll"]):
         profiles += ["native"]
-        tools += ["ghidra", "radare2/rizin", "detect-it-easy", "capa", "floss", "yara", "debugger"]
-        steps += ["Map imports/exports/strings to candidate functions", "Open the artifact in a decompiler and label entry points"]
+        tools += [
+            "inspect_native.py (zero-dependency native entrypoint disassembler)",
+            "ghidra",
+            "radare2/rizin",
+            "detect-it-easy",
+            "capa",
+            "floss",
+            "yara",
+            "debugger",
+        ]
+        steps += [
+            "Decode entry point opcodes with inspect_native.py",
+            "Map imports/exports/strings to candidate functions",
+            "Open the artifact in a decompiler and label entry points",
+        ]
 
     if any(x in joined for x in ["upx packed"]):
         profiles += ["packed"]
