@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -58,14 +59,28 @@ def audit_fusion_environment() -> dict[str, Any]:
 
     if cany_cli:
         try:
-            ver_res = subprocess.run([cany_cli, "--version"], capture_output=True, text=True, timeout=5)
+            ver_res = subprocess.run(
+                [cany_cli, "--version"],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=5,
+            )
             if ver_res.returncode == 0:
                 cany_version = ver_res.stdout.strip()
         except Exception:
             pass
 
         try:
-            doc_res = subprocess.run([cany_cli, "doctor", "--json"], capture_output=True, text=True, timeout=10)
+            doc_res = subprocess.run(
+                [cany_cli, "doctor", "--json"],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=10,
+            )
             if doc_res.returncode == 0:
                 doc_json = json.loads(doc_res.stdout)
                 cany_doctor_healthy = doc_json.get("healthy", False)
@@ -134,6 +149,8 @@ def hybrid_triage(target_path: Path, output_json: Path | None = None) -> dict[st
                 [cany_cli, "triage", str(target), "--json"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=20,
             )
             if res.returncode == 0:
@@ -200,7 +217,17 @@ def dual_track_verify(
     ]
 
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        sub_env = dict(os.environ)
+        sub_env["PYTHONIOENCODING"] = "utf-8"
+        proc = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=sub_env,
+            timeout=60,
+        )
         output_data = json.loads(proc.stdout) if proc.returncode in (0, 1) else {"error": proc.stderr}
     except Exception as e:
         output_data = {"error": str(e)}
